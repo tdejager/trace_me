@@ -1,4 +1,5 @@
 use std::ops;
+use std::ops::Neg;
 
 #[derive(Debug, Copy, Clone)]
 /// A simple Vec3 implementation
@@ -96,6 +97,14 @@ impl ops::Div<f64> for Vec3 {
     type Output = Vec3;
     fn div(self, rhs: f64) -> Self::Output {
         Vec3::new(self.x / rhs, self.y / rhs, self.z / rhs)
+    }
+}
+
+impl Neg for Vec3 {
+    type Output = Vec3;
+
+    fn neg(self) -> Self::Output {
+        Vec3 {x: -self.x,  y: -self.y,  z: -self.z}
     }
 }
 
