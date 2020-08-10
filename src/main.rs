@@ -1,37 +1,40 @@
+mod camera;
 mod color;
 mod geometry;
 mod hittable;
 mod ray;
 mod vec3;
 
-use color::Color;
-use ray::Ray;
-use vec3::{Point3, Vec3};
 use crate::hittable::Hittable;
 use crate::vec3::unit_vector;
+use camera::Camera;
+use color::Color;
 use geometry::Sphere;
+use rand::prelude::*;
+use ray::Ray;
+use vec3::{Point3, Vec3};
 
 // Image
 const ASPECT_RATIO: f64 = 16.0 / 9.0;
 const WIDTH: u32 = 400;
 const HEIGHT: u32 = (WIDTH as f64 / ASPECT_RATIO) as u32;
-
-// Camera
-const VIEWPORT_HEIGHT: f64 = 2.0;
-const VIEWPORT_WIDTH: f64 = ASPECT_RATIO * VIEWPORT_HEIGHT;
-const FOCAL_LENGTH: f64 = 1.0;
-
+const MAX_DEPTH: u32 = 50;
 
 fn degrees_to_radians(degrees: f64) -> f64 {
     degrees * std::f64::consts::PI / 180.0
 }
 
-
 /// Color the ray according to y component
-pub fn color_ray(ray: &Ray, world: &impl Hittable) -> Vec3 {
-    if let Some(hit) = world.hit(ray, 0.0, std::f64::INFINITY) {
+pub fn color_ray(ray: &Ray, world: &impl Hittable, depth: u32) -> Vec3 {
+    if depth <= 0 {
+        return Color::zero();
+    }
+
+    if let Some(hit) = world.hit(ray, 0.0001, std::f64::INFINITY) {
+        // Lambertian shading
+        let target = hit.p + hit.normal + Vec3::random_in_unit_sphere();
         // Color based on normal
-        return 0.5 * (hit.normal + Color::new(1., 1., 1.))
+        return 0.5 * color_ray(&Ray::new(hit.p, target - hit.p), world, depth - 1);
     }
     // Color based on y, scale from [-1, 1] to [0, 1]
     let unit_dir = unit_vector(ray.dir);
@@ -41,14 +44,18 @@ pub fn color_ray(ray: &Ray, world: &impl Hittable) -> Vec3 {
 }
 
 fn main() {
-    let camera_origin: Point3 = Point3::new(0., 0., 0.);
-    let horizontal = Vec3::new(VIEWPORT_WIDTH, 0., 0.);
-    let vertical = Vec3::new(0., VIEWPORT_HEIGHT, 0.);
-    let lower_left_corner =
-        camera_origin - horizontal / 2. - vertical / 2. - Vec3::new(0., 0., FOCAL_LENGTH);
+    let sphere_center = Sphere {
+        center: Point3::new(0., 0., -1.0),
+        radius: 0.5,
+    };
+    let big_sphere = Sphere {
+        center: Point3::new(0., -100.5, -1.0),
+        radius: 100.,
+    };
 
-    let sphere_center = Sphere{center: Point3::new(0., 0., -1.0), radius: 0.5};
-    let big_sphere = Sphere{center: Point3::new(0., -100.5, -1.0), radius: 100.};
+    let camera = Camera::new();
+    let mut rng = rand::thread_rng();
+    let samples_per_pixel: u32 = 100;
 
     let mut hittables: Vec<&dyn Hittable> = Vec::new();
     hittables.push(&sphere_center);
@@ -58,13 +65,14 @@ fn main() {
     for h in (0..HEIGHT - 1).rev() {
         eprintln!("\tScanlines remaining: {}", h);
         for w in 0..WIDTH {
-            let u = w as f64 / (WIDTH - 1) as f64;
-            let v = h as f64 / (HEIGHT - 1) as f64;
-            let ray = Ray::new(
-                camera_origin,
-                (lower_left_corner + u * horizontal + v * vertical) - camera_origin,
-            );
-            color::write_color(&color_ray(&ray, &hittables));
+            let mut pixel_color = Color::zero();
+            for _ in 0..samples_per_pixel {
+                let u = (w as f64 + rng.gen::<f64>()) / (WIDTH - 1) as f64;
+                let v = (h as f64 + rng.gen::<f64>()) / (HEIGHT - 1) as f64;
+                let ray = camera.get_ray(u, v);
+                pixel_color += color_ray(&ray, &hittables, MAX_DEPTH)
+            }
+            color::write_color(&pixel_color, samples_per_pixel);
         }
     }
     eprintln!("Done");

@@ -1,6 +1,93 @@
 !_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
 !_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
-!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
-!_TAG_PROGRAM_NAME	Exuberant Ctags	//
-!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
-!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	/6f0fdd31/
+Camera	src/camera.rs	/^impl Camera {$/;"	c
+Camera	src/camera.rs	/^pub struct Camera {$/;"	s
+Color	src/color.rs	/^pub type Color = Vec3;$/;"	t
+HitRecord	src/hittable.rs	/^impl HitRecord {$/;"	c
+HitRecord	src/hittable.rs	/^pub struct HitRecord {$/;"	s
+Hittable	src/hittable.rs	/^pub trait Hittable {$/;"	i
+Output	src/vec3.rs	/^    type Output = Vec3;$/;"	t	implementation:Vec3
+Output	src/vec3.rs	/^    type Output = Vec3;$/;"	t	implementation:f64
+Point3	src/vec3.rs	/^pub type Point3 = Vec3;$/;"	t
+Ray	src/ray.rs	/^impl Ray {$/;"	c
+Ray	src/ray.rs	/^pub struct Ray {$/;"	s
+Sphere	src/geometry.rs	/^impl Hittable for Sphere {$/;"	c
+Sphere	src/geometry.rs	/^impl Sphere {$/;"	c
+Sphere	src/geometry.rs	/^pub struct Sphere {$/;"	s
+Vec	src/hittable.rs	/^impl Hittable for Vec<& dyn Hittable> {$/;"	c
+Vec3	src/vec3.rs	/^impl Neg for Vec3 {$/;"	c
+Vec3	src/vec3.rs	/^impl Vec3 {$/;"	c
+Vec3	src/vec3.rs	/^impl ops::Add<&Vec3> for Vec3 {$/;"	c
+Vec3	src/vec3.rs	/^impl ops::Add<Vec3> for Vec3 {$/;"	c
+Vec3	src/vec3.rs	/^impl ops::AddAssign<Vec3> for Vec3 {$/;"	c
+Vec3	src/vec3.rs	/^impl ops::Div<f64> for Vec3 {$/;"	c
+Vec3	src/vec3.rs	/^impl ops::Mul<f64> for Vec3 {$/;"	c
+Vec3	src/vec3.rs	/^impl ops::MulAssign<f64> for Vec3 {$/;"	c
+Vec3	src/vec3.rs	/^impl ops::Sub<&Vec3> for Vec3 {$/;"	c
+Vec3	src/vec3.rs	/^impl ops::Sub<Vec3> for Vec3 {$/;"	c
+Vec3	src/vec3.rs	/^pub struct Vec3 {$/;"	s
+add	src/vec3.rs	/^    fn add(self, rhs: &Vec3) -> Self::Output {$/;"	P	implementation:Vec3
+add	src/vec3.rs	/^    fn add(self, rhs: Vec3) -> Self::Output {$/;"	P	implementation:Vec3
+add_assign	src/vec3.rs	/^    fn add_assign(&mut self, rhs: Vec3) {$/;"	P	implementation:Vec3
+at	src/ray.rs	/^    pub fn at(&self, t: f64) -> Point3 {$/;"	P	implementation:Ray
+calculate_face_normal	src/hittable.rs	/^fn calculate_face_normal(ray: &Ray, outward_normal: &Vec3) -> (bool, Vec3) {$/;"	f
+camera	src/main.rs	/^mod camera;$/;"	n
+center	src/geometry.rs	/^    pub center: Point3,$/;"	m	struct:Sphere
+clamp	src/color.rs	/^pub fn clamp(x: f64, min: f64, max: f64) -> f64 {$/;"	f
+color	src/main.rs	/^mod color;$/;"	n
+color_ray	src/main.rs	/^pub fn color_ray(ray: &Ray, world: &impl Hittable, depth: u32) -> Vec3 {$/;"	f
+create_record	src/geometry.rs	/^    fn create_record(&self, ray: &Ray, hit_at_t: f64) -> HitRecord {$/;"	P	implementation:Sphere
+cross	src/vec3.rs	/^    pub fn cross(&self, b: &Vec3) -> Self {$/;"	P	implementation:Vec3
+cross	src/vec3.rs	/^pub fn cross(a: &Vec3, b: &Vec3) -> Vec3 {$/;"	f
+degrees_to_radians	src/main.rs	/^fn degrees_to_radians(degrees: f64) -> f64 {$/;"	f
+dir	src/ray.rs	/^    pub dir: Vec3,$/;"	m	struct:Ray
+div	src/vec3.rs	/^    fn div(self, rhs: f64) -> Self::Output {$/;"	P	implementation:Vec3
+dot	src/vec3.rs	/^    pub fn dot(&self, b: &Vec3) -> f64 {$/;"	P	implementation:Vec3
+dot	src/vec3.rs	/^pub fn dot(a: &Vec3, b: &Vec3) -> f64 {$/;"	f
+f64	src/vec3.rs	/^impl ops::Mul<Vec3> for f64 {$/;"	c
+front_face	src/hittable.rs	/^    pub front_face: bool,$/;"	m	struct:HitRecord
+geometry	src/main.rs	/^mod geometry;$/;"	n
+get_ray	src/camera.rs	/^    pub fn get_ray(&self, u: f64, v: f64) -> Ray {$/;"	P	implementation:Camera
+hit	src/geometry.rs	/^    fn hit($/;"	P	implementation:Sphere
+hit	src/hittable.rs	/^    fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {$/;"	P	implementation:Vec
+hit	src/hittable.rs	/^    fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord>;$/;"	P	interface:Hittable
+hittable	src/main.rs	/^mod hittable;$/;"	n
+horizontal	src/camera.rs	/^    horizontal: Vec3,$/;"	m	struct:Camera
+length	src/vec3.rs	/^    pub fn length(&self) -> f64 {$/;"	P	implementation:Vec3
+length_squared	src/vec3.rs	/^    pub fn length_squared(&self) -> f64 {$/;"	P	implementation:Vec3
+lower_left_corner	src/camera.rs	/^    lower_left_corner: Point3,$/;"	m	struct:Camera
+main	src/main.rs	/^fn main() {$/;"	f
+mul	src/vec3.rs	/^    fn mul(self, rhs: Vec3) -> Self::Output {$/;"	P	implementation:f64
+mul	src/vec3.rs	/^    fn mul(self, rhs: f64) -> Self::Output {$/;"	P	implementation:Vec3
+mul_assign	src/vec3.rs	/^    fn mul_assign(&mut self, rhs: f64) {$/;"	P	implementation:Vec3
+neg	src/vec3.rs	/^    fn neg(self) -> Self::Output {$/;"	P	implementation:Vec3
+new	src/camera.rs	/^    pub fn new() -> Self {$/;"	P	implementation:Camera
+new	src/hittable.rs	/^    pub fn new(ray: &Ray, hit_point: Point3, normal: &Vec3, t: f64) -> Self {$/;"	P	implementation:HitRecord
+new	src/ray.rs	/^    pub fn new(origin: Point3, dir: Vec3) -> Self {$/;"	P	implementation:Ray
+new	src/vec3.rs	/^    pub fn new(x: f64, y: f64, z: f64) -> Self {$/;"	P	implementation:Vec3
+normal	src/hittable.rs	/^    pub normal: Vec3,$/;"	m	struct:HitRecord
+origin	src/camera.rs	/^    origin: Point3,$/;"	m	struct:Camera
+origin	src/ray.rs	/^    pub origin: Point3,$/;"	m	struct:Ray
+p	src/hittable.rs	/^    pub p: Point3,$/;"	m	struct:HitRecord
+radius	src/geometry.rs	/^    pub radius: f64,$/;"	m	struct:Sphere
+random	src/vec3.rs	/^    pub fn random() -> Self {$/;"	P	implementation:Vec3
+random_in_unit_sphere	src/vec3.rs	/^    pub fn random_in_unit_sphere() -> Self {$/;"	P	implementation:Vec3
+random_range	src/vec3.rs	/^    pub fn random_range(min: f64, max: f64) -> Self {$/;"	P	implementation:Vec3
+random_unit_vector	src/vec3.rs	/^    pub fn random_unit_vector() -> Self {$/;"	P	implementation:Vec3
+ray	src/main.rs	/^mod ray;$/;"	n
+sub	src/vec3.rs	/^    fn sub(self, rhs: &Vec3) -> Self::Output {$/;"	P	implementation:Vec3
+sub	src/vec3.rs	/^    fn sub(self, rhs: Vec3) -> Self::Output {$/;"	P	implementation:Vec3
+t	src/hittable.rs	/^    pub t: f64,$/;"	m	struct:HitRecord
+unit_vector	src/vec3.rs	/^pub fn unit_vector(a: Vec3) -> Vec3 {$/;"	f
+vec3	src/main.rs	/^mod vec3;$/;"	n
+vertical	src/camera.rs	/^    vertical: Vec3,$/;"	m	struct:Camera
+write_color	src/color.rs	/^pub fn write_color(c: &Color, samples_per_pixel: u32) {$/;"	f
+x	src/vec3.rs	/^    pub x: f64,$/;"	m	struct:Vec3
+y	src/vec3.rs	/^    pub y: f64,$/;"	m	struct:Vec3
+z	src/vec3.rs	/^    pub z: f64,$/;"	m	struct:Vec3
+zero	src/vec3.rs	/^    pub fn zero() -> Self {$/;"	P	implementation:Vec3

@@ -1,3 +1,4 @@
+use rand::Rng;
 use std::ops;
 use std::ops::Neg;
 
@@ -11,7 +12,7 @@ pub struct Vec3 {
 
 impl Vec3 {
     pub fn new(x: f64, y: f64, z: f64) -> Self {
-        Vec3 { x, y, z }
+        Self { x, y, z }
     }
 
     /// Returns the lenght for a Vec3
@@ -22,6 +23,57 @@ impl Vec3 {
     /// Returns the squared length for the Vec3
     pub fn length_squared(&self) -> f64 {
         self.x * self.x + self.y * self.y + self.z * self.z
+    }
+
+    /// Returns the zero vector
+    pub fn zero() -> Self {
+        Vec3::new(0., 0., 0.)
+    }
+
+    /// Dot product
+    pub fn dot(&self, b: &Vec3) -> f64 {
+        dot(&self, b)
+    }
+
+    /// Cross product
+    pub fn cross(&self, b: &Vec3) -> Self {
+        cross(self, &b)
+    }
+
+    /// Generates a random vector between [0,1]
+    pub fn random() -> Self {
+        let mut rnd = rand::thread_rng();
+        Self::new(rnd.gen(), rnd.gen(), rnd.gen())
+    }
+
+    /// Generates a random vector between the range [min, max]
+    pub fn random_range(min: f64, max: f64) -> Self {
+        let mut rnd = rand::thread_rng();
+        Self::new(
+            rnd.gen_range(min, max),
+            rnd.gen_range(min, max),
+            rnd.gen_range(min, max),
+        )
+    }
+
+    /// Return a random vector in the unit sphere
+    pub fn random_in_unit_sphere() -> Self {
+        // Just loop till you find one
+        loop {
+            let p = Self::random();
+            if p.length_squared() < 1. {
+                return p;
+            }
+        }
+    }
+
+    /// Random unit vector according to lambertian distribution
+    pub fn random_unit_vector() -> Self {
+        let mut rnd = rand::thread_rng();
+        let a = rnd.gen_range(0., 2. * std::f64::consts::PI);
+        let z = rnd.gen_range(-1., 1.);
+        let r = (1. as f64 - z * z).sqrt();
+        Vec3::new(r * a.cos(), r * a.sin(), z)
     }
 }
 
@@ -47,6 +99,14 @@ impl ops::Add<Vec3> for Vec3 {
     type Output = Vec3;
     fn add(self, rhs: Vec3) -> Self::Output {
         Vec3::new(self.x + rhs.x, self.y + rhs.y, self.z + rhs.z)
+    }
+}
+
+impl ops::AddAssign<Vec3> for Vec3 {
+    fn add_assign(&mut self, rhs: Vec3) {
+        self.x += rhs.x;
+        self.y += rhs.y;
+        self.z += rhs.z;
     }
 }
 
@@ -104,7 +164,11 @@ impl Neg for Vec3 {
     type Output = Vec3;
 
     fn neg(self) -> Self::Output {
-        Vec3 {x: -self.x,  y: -self.y,  z: -self.z}
+        Vec3 {
+            x: -self.x,
+            y: -self.y,
+            z: -self.z,
+        }
     }
 }
 
