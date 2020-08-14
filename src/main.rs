@@ -2,6 +2,7 @@ mod camera;
 mod color;
 mod geometry;
 mod hittable;
+mod material;
 mod ray;
 mod vec3;
 
@@ -10,6 +11,7 @@ use crate::vec3::unit_vector;
 use camera::Camera;
 use color::Color;
 use geometry::Sphere;
+use material::{Lambertian, Metal};
 use rand::prelude::*;
 use ray::Ray;
 use vec3::{Point3, Vec3};
@@ -31,10 +33,10 @@ pub fn color_ray(ray: &Ray, world: &impl Hittable, depth: u32) -> Vec3 {
     }
 
     if let Some(hit) = world.hit(ray, 0.0001, std::f64::INFINITY) {
-        // Lambertian shading
-        let target = hit.p + hit.normal + Vec3::random_in_unit_sphere();
-        // Color based on normal
-        return 0.5 * color_ray(&Ray::new(hit.p, target - hit.p), world, depth - 1);
+        // Color based on the material
+        if let Some(material) = hit.material.scatter(ray, &hit) {
+            return material.attenuation * color_ray(&material.scattered, world, depth - 1);
+        }
     }
     // Color based on y, scale from [-1, 1] to [0, 1]
     let unit_dir = unit_vector(ray.dir);
@@ -44,22 +46,41 @@ pub fn color_ray(ray: &Ray, world: &impl Hittable, depth: u32) -> Vec3 {
 }
 
 fn main() {
-    let sphere_center = Sphere {
-        center: Point3::new(0., 0., -1.0),
-        radius: 0.5,
-    };
+    let material_ground = Lambertian::new(Color::new(0.8, 0.8, 0.0));
+    let material_center = Lambertian::new(Color::new(0.7, 0.3, 0.3));
+    let material_left = Metal::new(Color::new(0.7, 0.8, 0.8), 0.3);
+    let material_right = Metal::new(Color::new(0.7, 0.6, 0.2), 1.0);
+
     let big_sphere = Sphere {
         center: Point3::new(0., -100.5, -1.0),
         radius: 100.,
+        material: Box::new(material_ground),
     };
-
-    let camera = Camera::new();
-    let mut rng = rand::thread_rng();
-    let samples_per_pixel: u32 = 100;
+    let sphere_center = Sphere {
+        center: Point3::new(0., 0., -1.0),
+        radius: 0.5,
+        material: Box::new(material_center),
+    };
+    let sphere_left = Sphere {
+        center: Point3::new(-1.0, 0., -1.0),
+        radius: 0.5,
+        material: Box::new(material_left),
+    };
+    let sphere_right = Sphere {
+        center: Point3::new(1.0, 0., -1.0),
+        radius: 0.5,
+        material: Box::new(material_right),
+    };
 
     let mut hittables: Vec<&dyn Hittable> = Vec::new();
     hittables.push(&sphere_center);
     hittables.push(&big_sphere);
+    hittables.push(&sphere_left);
+    hittables.push(&sphere_right);
+
+    let camera = Camera::new();
+    let mut rng = rand::thread_rng();
+    let samples_per_pixel: u32 = 100;
 
     println!("P3\n {} {}\n255", WIDTH, HEIGHT);
     for h in (0..HEIGHT - 1).rev() {

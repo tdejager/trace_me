@@ -56,6 +56,11 @@ impl Vec3 {
         )
     }
 
+    /// Returns the unit vector of this vector
+    pub fn unit_vector(&self) -> Self {
+        unit_vector(*self)
+    }
+
     /// Return a random vector in the unit sphere
     pub fn random_in_unit_sphere() -> Self {
         // Just loop till you find one
@@ -74,6 +79,11 @@ impl Vec3 {
         let z = rnd.gen_range(-1., 1.);
         let r = (1. as f64 - z * z).sqrt();
         Vec3::new(r * a.cos(), r * a.sin(), z)
+    }
+
+    /// Reflect the vector with regards to the normal n
+    pub fn reflect(&self, n: &Vec3) -> Self {
+        *self - 2. * self.dot(n) * (*n)
     }
 }
 
@@ -135,6 +145,13 @@ impl ops::Mul<f64> for Vec3 {
     type Output = Vec3;
     fn mul(self, rhs: f64) -> Self::Output {
         Vec3::new(self.x * rhs, self.y * rhs, self.z * rhs)
+    }
+}
+
+impl ops::Mul<Vec3> for Vec3 {
+    type Output = Vec3;
+    fn mul(self, rhs: Vec3) -> Self::Output {
+        Vec3::new(self.x * rhs.x, self.y * rhs.y, self.z * rhs.z)
     }
 }
 

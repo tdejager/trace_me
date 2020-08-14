@@ -8,9 +8,17 @@
 Camera	src/camera.rs	/^impl Camera {$/;"	c
 Camera	src/camera.rs	/^pub struct Camera {$/;"	s
 Color	src/color.rs	/^pub type Color = Vec3;$/;"	t
-HitRecord	src/hittable.rs	/^impl HitRecord {$/;"	c
-HitRecord	src/hittable.rs	/^pub struct HitRecord {$/;"	s
+HitRecord	src/hittable.rs	/^impl<'a> HitRecord<'a> {$/;"	c
+HitRecord	src/hittable.rs	/^pub struct HitRecord<'a> {$/;"	s
 Hittable	src/hittable.rs	/^pub trait Hittable {$/;"	i
+Lambertian	src/material.rs	/^impl Lambertian {$/;"	c
+Lambertian	src/material.rs	/^impl Material for Lambertian {$/;"	c
+Lambertian	src/material.rs	/^pub struct Lambertian {$/;"	s
+Material	src/material.rs	/^pub trait Material {$/;"	i
+MaterialInfo	src/material.rs	/^pub struct MaterialInfo {$/;"	s
+Metal	src/material.rs	/^impl Material for Metal {$/;"	c
+Metal	src/material.rs	/^impl Metal {$/;"	c
+Metal	src/material.rs	/^pub struct Metal {$/;"	s
 Output	src/vec3.rs	/^    type Output = Vec3;$/;"	t	implementation:Vec3
 Output	src/vec3.rs	/^    type Output = Vec3;$/;"	t	implementation:f64
 Point3	src/vec3.rs	/^pub type Point3 = Vec3;$/;"	t
@@ -19,13 +27,14 @@ Ray	src/ray.rs	/^pub struct Ray {$/;"	s
 Sphere	src/geometry.rs	/^impl Hittable for Sphere {$/;"	c
 Sphere	src/geometry.rs	/^impl Sphere {$/;"	c
 Sphere	src/geometry.rs	/^pub struct Sphere {$/;"	s
-Vec	src/hittable.rs	/^impl Hittable for Vec<& dyn Hittable> {$/;"	c
+Vec	src/hittable.rs	/^impl Hittable for Vec<&dyn Hittable> {$/;"	c
 Vec3	src/vec3.rs	/^impl Neg for Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^impl Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^impl ops::Add<&Vec3> for Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^impl ops::Add<Vec3> for Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^impl ops::AddAssign<Vec3> for Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^impl ops::Div<f64> for Vec3 {$/;"	c
+Vec3	src/vec3.rs	/^impl ops::Mul<Vec3> for Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^impl ops::Mul<f64> for Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^impl ops::MulAssign<f64> for Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^impl ops::Sub<&Vec3> for Vec3 {$/;"	c
@@ -34,7 +43,10 @@ Vec3	src/vec3.rs	/^pub struct Vec3 {$/;"	s
 add	src/vec3.rs	/^    fn add(self, rhs: &Vec3) -> Self::Output {$/;"	P	implementation:Vec3
 add	src/vec3.rs	/^    fn add(self, rhs: Vec3) -> Self::Output {$/;"	P	implementation:Vec3
 add_assign	src/vec3.rs	/^    fn add_assign(&mut self, rhs: Vec3) {$/;"	P	implementation:Vec3
+albedo	src/material.rs	/^    albedo: Color,$/;"	m	struct:Lambertian
+albedo	src/material.rs	/^    albedo: Color,$/;"	m	struct:Metal
 at	src/ray.rs	/^    pub fn at(&self, t: f64) -> Point3 {$/;"	P	implementation:Ray
+attenuation	src/material.rs	/^    pub attenuation: Color,$/;"	m	struct:MaterialInfo
 calculate_face_normal	src/hittable.rs	/^fn calculate_face_normal(ray: &Ray, outward_normal: &Vec3) -> (bool, Vec3) {$/;"	f
 camera	src/main.rs	/^mod camera;$/;"	n
 center	src/geometry.rs	/^    pub center: Point3,$/;"	m	struct:Sphere
@@ -51,9 +63,10 @@ dot	src/vec3.rs	/^    pub fn dot(&self, b: &Vec3) -> f64 {$/;"	P	implementation:
 dot	src/vec3.rs	/^pub fn dot(a: &Vec3, b: &Vec3) -> f64 {$/;"	f
 f64	src/vec3.rs	/^impl ops::Mul<Vec3> for f64 {$/;"	c
 front_face	src/hittable.rs	/^    pub front_face: bool,$/;"	m	struct:HitRecord
+fuzz	src/material.rs	/^    fuzz: f64,$/;"	m	struct:Metal
 geometry	src/main.rs	/^mod geometry;$/;"	n
 get_ray	src/camera.rs	/^    pub fn get_ray(&self, u: f64, v: f64) -> Ray {$/;"	P	implementation:Camera
-hit	src/geometry.rs	/^    fn hit($/;"	P	implementation:Sphere
+hit	src/geometry.rs	/^    fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<crate::hittable::HitRecord> {$/;"	P	implementation:Sphere
 hit	src/hittable.rs	/^    fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {$/;"	P	implementation:Vec
 hit	src/hittable.rs	/^    fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord>;$/;"	P	interface:Hittable
 hittable	src/main.rs	/^mod hittable;$/;"	n
@@ -62,12 +75,18 @@ length	src/vec3.rs	/^    pub fn length(&self) -> f64 {$/;"	P	implementation:Vec3
 length_squared	src/vec3.rs	/^    pub fn length_squared(&self) -> f64 {$/;"	P	implementation:Vec3
 lower_left_corner	src/camera.rs	/^    lower_left_corner: Point3,$/;"	m	struct:Camera
 main	src/main.rs	/^fn main() {$/;"	f
+material	src/geometry.rs	/^    pub material: Box<dyn Material>,$/;"	m	struct:Sphere
+material	src/hittable.rs	/^    pub material: &'a dyn Material,$/;"	m	struct:HitRecord
+material	src/main.rs	/^mod material;$/;"	n
+mul	src/vec3.rs	/^    fn mul(self, rhs: Vec3) -> Self::Output {$/;"	P	implementation:Vec3
 mul	src/vec3.rs	/^    fn mul(self, rhs: Vec3) -> Self::Output {$/;"	P	implementation:f64
 mul	src/vec3.rs	/^    fn mul(self, rhs: f64) -> Self::Output {$/;"	P	implementation:Vec3
 mul_assign	src/vec3.rs	/^    fn mul_assign(&mut self, rhs: f64) {$/;"	P	implementation:Vec3
 neg	src/vec3.rs	/^    fn neg(self) -> Self::Output {$/;"	P	implementation:Vec3
 new	src/camera.rs	/^    pub fn new() -> Self {$/;"	P	implementation:Camera
-new	src/hittable.rs	/^    pub fn new(ray: &Ray, hit_point: Point3, normal: &Vec3, t: f64) -> Self {$/;"	P	implementation:HitRecord
+new	src/hittable.rs	/^    pub fn new($/;"	P	implementation:HitRecord
+new	src/material.rs	/^    pub fn new(albedo: Color) -> Self {$/;"	P	implementation:Lambertian
+new	src/material.rs	/^    pub fn new(albedo: Color, fuzz: f64) -> Self {$/;"	P	implementation:Metal
 new	src/ray.rs	/^    pub fn new(origin: Point3, dir: Vec3) -> Self {$/;"	P	implementation:Ray
 new	src/vec3.rs	/^    pub fn new(x: f64, y: f64, z: f64) -> Self {$/;"	P	implementation:Vec3
 normal	src/hittable.rs	/^    pub normal: Vec3,$/;"	m	struct:HitRecord
@@ -80,9 +99,15 @@ random_in_unit_sphere	src/vec3.rs	/^    pub fn random_in_unit_sphere() -> Self {
 random_range	src/vec3.rs	/^    pub fn random_range(min: f64, max: f64) -> Self {$/;"	P	implementation:Vec3
 random_unit_vector	src/vec3.rs	/^    pub fn random_unit_vector() -> Self {$/;"	P	implementation:Vec3
 ray	src/main.rs	/^mod ray;$/;"	n
+reflect	src/vec3.rs	/^    pub fn reflect(&self, n: &Vec3) -> Self {$/;"	P	implementation:Vec3
+scatter	src/material.rs	/^    fn scatter(&self, _ray_incoming: &Ray, hit_record: &HitRecord) -> Option<MaterialInfo> {$/;"	P	implementation:Lambertian
+scatter	src/material.rs	/^    fn scatter(&self, ray_incoming: &Ray, hit_record: &HitRecord) -> Option<MaterialInfo> {$/;"	P	implementation:Metal
+scatter	src/material.rs	/^    fn scatter(&self, ray_incoming: &Ray, hit_record: &HitRecord) -> Option<MaterialInfo>;$/;"	P	interface:Material
+scattered	src/material.rs	/^    pub scattered: Ray,$/;"	m	struct:MaterialInfo
 sub	src/vec3.rs	/^    fn sub(self, rhs: &Vec3) -> Self::Output {$/;"	P	implementation:Vec3
 sub	src/vec3.rs	/^    fn sub(self, rhs: Vec3) -> Self::Output {$/;"	P	implementation:Vec3
 t	src/hittable.rs	/^    pub t: f64,$/;"	m	struct:HitRecord
+unit_vector	src/vec3.rs	/^    pub fn unit_vector(&self) -> Self {$/;"	P	implementation:Vec3
 unit_vector	src/vec3.rs	/^pub fn unit_vector(a: Vec3) -> Vec3 {$/;"	f
 vec3	src/main.rs	/^mod vec3;$/;"	n
 vertical	src/camera.rs	/^    vertical: Vec3,$/;"	m	struct:Camera
