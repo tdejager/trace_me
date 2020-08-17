@@ -8,6 +8,9 @@
 Camera	src/camera.rs	/^impl Camera {$/;"	c
 Camera	src/camera.rs	/^pub struct Camera {$/;"	s
 Color	src/color.rs	/^pub type Color = Vec3;$/;"	t
+Dialectric	src/material.rs	/^impl Dialectric {$/;"	c
+Dialectric	src/material.rs	/^impl Material for Dialectric {$/;"	c
+Dialectric	src/material.rs	/^pub struct Dialectric {$/;"	s
 HitRecord	src/hittable.rs	/^impl<'a> HitRecord<'a> {$/;"	c
 HitRecord	src/hittable.rs	/^pub struct HitRecord<'a> {$/;"	s
 Hittable	src/hittable.rs	/^pub trait Hittable {$/;"	i
@@ -35,6 +38,7 @@ Vec3	src/vec3.rs	/^impl ops::Add<Vec3> for Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^impl ops::AddAssign<Vec3> for Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^impl ops::Div<f64> for Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^impl ops::Mul<Vec3> for Vec3 {$/;"	c
+Vec3	src/vec3.rs	/^impl ops::Mul<f64> for &Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^impl ops::Mul<f64> for Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^impl ops::MulAssign<f64> for Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^impl ops::Sub<&Vec3> for Vec3 {$/;"	c
@@ -61,6 +65,7 @@ dir	src/ray.rs	/^    pub dir: Vec3,$/;"	m	struct:Ray
 div	src/vec3.rs	/^    fn div(self, rhs: f64) -> Self::Output {$/;"	P	implementation:Vec3
 dot	src/vec3.rs	/^    pub fn dot(&self, b: &Vec3) -> f64 {$/;"	P	implementation:Vec3
 dot	src/vec3.rs	/^pub fn dot(a: &Vec3, b: &Vec3) -> f64 {$/;"	f
+f64	src/vec3.rs	/^impl ops::Mul<&Vec3> for f64 {$/;"	c
 f64	src/vec3.rs	/^impl ops::Mul<Vec3> for f64 {$/;"	c
 front_face	src/hittable.rs	/^    pub front_face: bool,$/;"	m	struct:HitRecord
 fuzz	src/material.rs	/^    fuzz: f64,$/;"	m	struct:Metal
@@ -78,6 +83,7 @@ main	src/main.rs	/^fn main() {$/;"	f
 material	src/geometry.rs	/^    pub material: Box<dyn Material>,$/;"	m	struct:Sphere
 material	src/hittable.rs	/^    pub material: &'a dyn Material,$/;"	m	struct:HitRecord
 material	src/main.rs	/^mod material;$/;"	n
+mul	src/vec3.rs	/^    fn mul(self, rhs: &Vec3) -> Self::Output {$/;"	P	implementation:f64
 mul	src/vec3.rs	/^    fn mul(self, rhs: Vec3) -> Self::Output {$/;"	P	implementation:Vec3
 mul	src/vec3.rs	/^    fn mul(self, rhs: Vec3) -> Self::Output {$/;"	P	implementation:f64
 mul	src/vec3.rs	/^    fn mul(self, rhs: f64) -> Self::Output {$/;"	P	implementation:Vec3
@@ -87,6 +93,7 @@ new	src/camera.rs	/^    pub fn new() -> Self {$/;"	P	implementation:Camera
 new	src/hittable.rs	/^    pub fn new($/;"	P	implementation:HitRecord
 new	src/material.rs	/^    pub fn new(albedo: Color) -> Self {$/;"	P	implementation:Lambertian
 new	src/material.rs	/^    pub fn new(albedo: Color, fuzz: f64) -> Self {$/;"	P	implementation:Metal
+new	src/material.rs	/^    pub fn new(refraction_index: f64) -> Self {$/;"	P	implementation:Dialectric
 new	src/ray.rs	/^    pub fn new(origin: Point3, dir: Vec3) -> Self {$/;"	P	implementation:Ray
 new	src/vec3.rs	/^    pub fn new(x: f64, y: f64, z: f64) -> Self {$/;"	P	implementation:Vec3
 normal	src/hittable.rs	/^    pub normal: Vec3,$/;"	m	struct:HitRecord
@@ -100,10 +107,14 @@ random_range	src/vec3.rs	/^    pub fn random_range(min: f64, max: f64) -> Self {
 random_unit_vector	src/vec3.rs	/^    pub fn random_unit_vector() -> Self {$/;"	P	implementation:Vec3
 ray	src/main.rs	/^mod ray;$/;"	n
 reflect	src/vec3.rs	/^    pub fn reflect(&self, n: &Vec3) -> Self {$/;"	P	implementation:Vec3
+refract	src/vec3.rs	/^    pub fn refract(&self, n: &Vec3, etai_over_etat: f64) -> Self {$/;"	P	implementation:Vec3
+refraction_index	src/material.rs	/^    refraction_index: f64,$/;"	m	struct:Dialectric
 scatter	src/material.rs	/^    fn scatter(&self, _ray_incoming: &Ray, hit_record: &HitRecord) -> Option<MaterialInfo> {$/;"	P	implementation:Lambertian
+scatter	src/material.rs	/^    fn scatter(&self, ray_incoming: &Ray, hit_record: &HitRecord) -> Option<MaterialInfo> {$/;"	P	implementation:Dialectric
 scatter	src/material.rs	/^    fn scatter(&self, ray_incoming: &Ray, hit_record: &HitRecord) -> Option<MaterialInfo> {$/;"	P	implementation:Metal
 scatter	src/material.rs	/^    fn scatter(&self, ray_incoming: &Ray, hit_record: &HitRecord) -> Option<MaterialInfo>;$/;"	P	interface:Material
 scattered	src/material.rs	/^    pub scattered: Ray,$/;"	m	struct:MaterialInfo
+schlick	src/material.rs	/^fn schlick(cosine: f64, refraction_index: f64) -> f64 {$/;"	f
 sub	src/vec3.rs	/^    fn sub(self, rhs: &Vec3) -> Self::Output {$/;"	P	implementation:Vec3
 sub	src/vec3.rs	/^    fn sub(self, rhs: Vec3) -> Self::Output {$/;"	P	implementation:Vec3
 t	src/hittable.rs	/^    pub t: f64,$/;"	m	struct:HitRecord

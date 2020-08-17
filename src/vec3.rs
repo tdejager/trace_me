@@ -85,6 +85,15 @@ impl Vec3 {
     pub fn reflect(&self, n: &Vec3) -> Self {
         *self - 2. * self.dot(n) * (*n)
     }
+
+    /// Refract the vector with regards to the normal and
+    /// refraction index
+    pub fn refract(&self, n: &Vec3, etai_over_etat: f64) -> Self {
+        let cos_theta = -self.dot(n);
+        let r_out_perp = etai_over_etat * (*self + (*n * cos_theta));
+        let r_out_parallel = -(1.0 - r_out_perp.length_squared()).abs().sqrt() * n;
+        r_out_perp + r_out_parallel
+    }
 }
 
 /// Calculates the dot product for the Vec3
@@ -148,17 +157,30 @@ impl ops::Mul<f64> for Vec3 {
     }
 }
 
-impl ops::Mul<Vec3> for Vec3 {
-    type Output = Vec3;
-    fn mul(self, rhs: Vec3) -> Self::Output {
-        Vec3::new(self.x * rhs.x, self.y * rhs.y, self.z * rhs.z)
-    }
-}
-
 impl ops::Mul<Vec3> for f64 {
     type Output = Vec3;
     fn mul(self, rhs: Vec3) -> Self::Output {
         Vec3::new(self * rhs.x, self * rhs.y, self * rhs.z)
+    }
+}
+
+impl ops::Mul<f64> for &Vec3 {
+    type Output = Vec3;
+    fn mul(self, rhs: f64) -> Self::Output {
+        Vec3::new(self.x * rhs, self.y * rhs, self.z * rhs)
+    }
+}
+
+impl ops::Mul<&Vec3> for f64 {
+    type Output = Vec3;
+    fn mul(self, rhs: &Vec3) -> Self::Output {
+        Vec3::new(self * rhs.x, self * rhs.y, self * rhs.z)
+    }
+}
+impl ops::Mul<Vec3> for Vec3 {
+    type Output = Vec3;
+    fn mul(self, rhs: Vec3) -> Self::Output {
+        Vec3::new(self.x * rhs.x, self.y * rhs.y, self.z * rhs.z)
     }
 }
 

@@ -11,7 +11,7 @@ use crate::vec3::unit_vector;
 use camera::Camera;
 use color::Color;
 use geometry::Sphere;
-use material::{Lambertian, Metal};
+use material::{Dialectric, Lambertian, Metal};
 use rand::prelude::*;
 use ray::Ray;
 use vec3::{Point3, Vec3};
@@ -47,8 +47,8 @@ pub fn color_ray(ray: &Ray, world: &impl Hittable, depth: u32) -> Vec3 {
 
 fn main() {
     let material_ground = Lambertian::new(Color::new(0.8, 0.8, 0.0));
-    let material_center = Lambertian::new(Color::new(0.7, 0.3, 0.3));
-    let material_left = Metal::new(Color::new(0.7, 0.8, 0.8), 0.3);
+    let material_center = Dialectric::new(1.5);
+    let material_left = Dialectric::new(1.5);
     let material_right = Metal::new(Color::new(0.7, 0.6, 0.2), 1.0);
 
     let big_sphere = Sphere {
