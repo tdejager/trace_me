@@ -41,7 +41,9 @@ Vec3	src/vec3.rs	/^impl ops::Mul<Vec3> for Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^impl ops::Mul<f64> for &Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^impl ops::Mul<f64> for Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^impl ops::MulAssign<f64> for Vec3 {$/;"	c
+Vec3	src/vec3.rs	/^impl ops::Sub<&Vec3> for &Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^impl ops::Sub<&Vec3> for Vec3 {$/;"	c
+Vec3	src/vec3.rs	/^impl ops::Sub<Vec3> for &Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^impl ops::Sub<Vec3> for Vec3 {$/;"	c
 Vec3	src/vec3.rs	/^pub struct Vec3 {$/;"	s
 add	src/vec3.rs	/^    fn add(self, rhs: &Vec3) -> Self::Output {$/;"	P	implementation:Vec3
@@ -60,7 +62,7 @@ color_ray	src/main.rs	/^pub fn color_ray(ray: &Ray, world: &impl Hittable, depth
 create_record	src/geometry.rs	/^    fn create_record(&self, ray: &Ray, hit_at_t: f64) -> HitRecord {$/;"	P	implementation:Sphere
 cross	src/vec3.rs	/^    pub fn cross(&self, b: &Vec3) -> Self {$/;"	P	implementation:Vec3
 cross	src/vec3.rs	/^pub fn cross(a: &Vec3, b: &Vec3) -> Vec3 {$/;"	f
-degrees_to_radians	src/main.rs	/^fn degrees_to_radians(degrees: f64) -> f64 {$/;"	f
+degrees_to_radians	src/camera.rs	/^fn degrees_to_radians(degrees: f64) -> f64 {$/;"	f
 dir	src/ray.rs	/^    pub dir: Vec3,$/;"	m	struct:Ray
 div	src/vec3.rs	/^    fn div(self, rhs: f64) -> Self::Output {$/;"	P	implementation:Vec3
 dot	src/vec3.rs	/^    pub fn dot(&self, b: &Vec3) -> f64 {$/;"	P	implementation:Vec3
@@ -89,7 +91,7 @@ mul	src/vec3.rs	/^    fn mul(self, rhs: Vec3) -> Self::Output {$/;"	P	implementa
 mul	src/vec3.rs	/^    fn mul(self, rhs: f64) -> Self::Output {$/;"	P	implementation:Vec3
 mul_assign	src/vec3.rs	/^    fn mul_assign(&mut self, rhs: f64) {$/;"	P	implementation:Vec3
 neg	src/vec3.rs	/^    fn neg(self) -> Self::Output {$/;"	P	implementation:Vec3
-new	src/camera.rs	/^    pub fn new() -> Self {$/;"	P	implementation:Camera
+new	src/camera.rs	/^    pub fn new($/;"	P	implementation:Camera
 new	src/hittable.rs	/^    pub fn new($/;"	P	implementation:HitRecord
 new	src/material.rs	/^    pub fn new(albedo: Color) -> Self {$/;"	P	implementation:Lambertian
 new	src/material.rs	/^    pub fn new(albedo: Color, fuzz: f64) -> Self {$/;"	P	implementation:Metal

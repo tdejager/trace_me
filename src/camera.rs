@@ -11,24 +11,39 @@ pub struct Camera {
     vertical: Vec3,
 }
 
-impl Camera {
-    pub fn new() -> Self {
-        let aspect_ratio: f64 = 16.0 / 9.0;
-        let viewport_height: f64 = 2.0;
-        let viewport_width: f64 = aspect_ratio * viewport_height;
-        let focal_length = 1.0;
+fn degrees_to_radians(degrees: f64) -> f64 {
+    degrees * std::f64::consts::PI / 180.0
+}
 
-        let horizontal = Vec3::new(viewport_width, 0., 0.);
-        let vertical = Vec3::new(0., viewport_height, 0.);
-        let origin = Vec3::zero();
+impl Camera {
+    pub fn new(
+        look_from: &Point3,
+        look_at: &Point3,
+        vup: &Vec3,
+        vfov_degrees: f64,
+        aspect_ratio: f64,
+    ) -> Self {
+        // Calculate lengths based on fov
+        let theta = degrees_to_radians(vfov_degrees);
+        let h = (theta / 2.).tan();
+        let viewport_height: f64 = 2.0 * h;
+        let viewport_width: f64 = aspect_ratio * viewport_height;
+
+        // Calculate basis vectors
+        let w = (look_from - look_at).unit_vector();
+        let u = vup.cross(&w).unit_vector();
+        let v = w.cross(&u);
+
+        // Calculate camera parameters
+        let origin = look_from;
+        let horizontal = viewport_width * u;
+        let vertical = viewport_height * v;
+
         Camera {
-            origin,
+            origin: *look_from,
             horizontal,
             vertical,
-            lower_left_corner: origin
-                - horizontal / 2.
-                - vertical / 2.
-                - Vec3::new(0., 0., focal_length),
+            lower_left_corner: origin - horizontal / 2. - vertical / 2. - w,
         }
     }
 
