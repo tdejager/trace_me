@@ -6,6 +6,7 @@ mod material;
 mod ray;
 mod vec3;
 
+use crate::camera::CameraBuilder;
 use crate::hittable::Hittable;
 use crate::vec3::unit_vector;
 use camera::Camera;
@@ -77,9 +78,8 @@ fn main() {
     // Create camera
     let look_from = Vec3::new(-2., 2., 1.);
     let look_at = Vec3::new(0., 0., -1.);
-    let vup = Vec3::new(0., 1., 0.);
 
-    let camera = Camera::new(&look_from, &look_at, &vup, 20.0, 16. / 9.);
+    let camera = CameraBuilder::new(look_from, look_at).build();
     let mut rng = rand::thread_rng();
     let samples_per_pixel: u32 = 100;
 

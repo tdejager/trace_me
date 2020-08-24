@@ -9,8 +9,75 @@ pub struct Camera {
     lower_left_corner: Point3,
     horizontal: Vec3,
     vertical: Vec3,
+    u: Vec3,
+    v: Vec3,
+    w: Vec3,
+    lens_radius: f64,
 }
 
+pub struct CameraBuilder {
+    look_from: Point3,
+    look_at: Point3,
+    vup: Vec3,
+    vfow_degrees: f64,
+    aspect_ratio: f64,
+    aperture: f64,
+    focus_distance: f64,
+}
+
+impl CameraBuilder {
+    /// Create a new builder object
+    pub fn new(look_from: Point3, look_at: Point3) -> Self {
+        Self {
+            look_from,
+            look_at,
+            vup: Vec3::new(0., 1., 0.),
+            aperture: 0.5,
+            focus_distance: (look_from - look_at).length(),
+            vfow_degrees: 20.0,
+            aspect_ratio: 16.0 / 9.0,
+        }
+    }
+
+    /// Set the up vector
+    pub fn set_up_vector(&mut self, vup: &Vec3) -> &Self {
+        self.vup = *vup;
+        self
+    }
+
+    /// Set the aperture of the camera lens
+    pub fn set_aperture(&mut self, aperture: f64) -> &Self {
+        self.aperture = aperture;
+        self
+    }
+
+    /// Set the focus distance for the camera
+    pub fn set_focus_distance(&mut self, focus_distance: f64) -> &Self {
+        self.focus_distance = focus_distance;
+        self
+    }
+
+    /// Set the aspect ratio for the camera
+    pub fn set_aspect_ratio(&mut self, aspect_ratio: f64) -> &Self {
+        self.aspect_ratio = aspect_ratio;
+        self
+    }
+
+    /// Build the final camera
+    pub fn build(self) -> Camera {
+        Camera::new(
+            &self.look_from,
+            &self.look_at,
+            &self.vup,
+            self.vfow_degrees,
+            self.aspect_ratio,
+            self.aperture,
+            self.focus_distance,
+        )
+    }
+}
+
+/// Convert from degrees to radians
 fn degrees_to_radians(degrees: f64) -> f64 {
     degrees * std::f64::consts::PI / 180.0
 }
@@ -22,36 +89,48 @@ impl Camera {
         vup: &Vec3,
         vfov_degrees: f64,
         aspect_ratio: f64,
+        aperture: f64,
+        focus_distance: f64,
     ) -> Self {
-        // Calculate lengths based on fov
+        // Calculate lengths based on the vertical fov
         let theta = degrees_to_radians(vfov_degrees);
         let h = (theta / 2.).tan();
         let viewport_height: f64 = 2.0 * h;
         let viewport_width: f64 = aspect_ratio * viewport_height;
 
         // Calculate basis vectors
+        // This looks at the point
         let w = (look_from - look_at).unit_vector();
+        // This is perpendicular to the world up vector and the vector looking at the point
         let u = vup.cross(&w).unit_vector();
+        // This the up vector
         let v = w.cross(&u);
 
         // Calculate camera parameters
         let origin = look_from;
-        let horizontal = viewport_width * u;
-        let vertical = viewport_height * v;
+        let horizontal = focus_distance * viewport_width * u;
+        let vertical = focus_distance * viewport_height * v;
 
         Camera {
             origin: *look_from,
+            lower_left_corner: origin - horizontal / 2. - vertical / 2. - focus_distance*w,
             horizontal,
             vertical,
-            lower_left_corner: origin - horizontal / 2. - vertical / 2. - w,
+            u,
+            v,
+            w,
+            lens_radius: aperture / 2.,
         }
     }
 
     /// Cast a ray with the camera
-    pub fn get_ray(&self, u: f64, v: f64) -> Ray {
+    pub fn get_ray(&self, s: f64, t: f64) -> Ray {
+
+        let rd = self.lens_radius * Vec3::random_in_unit_disk();
+        let offset = (self.u * rd.x) + (self.v * rd.y);
         Ray::new(
-            self.origin,
-            self.lower_left_corner + u * self.horizontal + v * self.vertical - self.origin,
+            self.origin + offset,
+            self.lower_left_corner + s * self.horizontal + t * self.vertical - self.origin - offset,
         )
     }
 }

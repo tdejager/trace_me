@@ -94,6 +94,17 @@ impl Vec3 {
         let r_out_parallel = -(1.0 - r_out_perp.length_squared()).abs().sqrt() * n;
         r_out_perp + r_out_parallel
     }
+
+    /// Get a random vector in the unit disk
+    pub fn random_in_unit_disk() -> Self {
+        let mut rnd = rand::thread_rng();
+        loop {
+            let p = Vec3::new(rnd.gen_range(-1.0, 1.0), rnd.gen_range(-1.0, 1.0), 0.);
+            if p.length_squared() < 1.0 {
+                return p;
+            }
+        }
+    }
 }
 
 /// Calculates the dot product for the Vec3

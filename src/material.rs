@@ -129,4 +129,3 @@ impl Material for Dialectric {
         })
     }
 }
-
