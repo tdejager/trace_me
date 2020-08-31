@@ -9,7 +9,6 @@ mod vec3;
 use crate::camera::CameraBuilder;
 use crate::hittable::Hittable;
 use crate::vec3::unit_vector;
-use camera::Camera;
 use color::Color;
 use geometry::Sphere;
 use material::{Dialectric, Lambertian, Metal};

@@ -15,13 +15,21 @@ pub struct Camera {
     lens_radius: f64,
 }
 
+/// Struct to create a camera with specific settings
 pub struct CameraBuilder {
+    // Look from this point
     look_from: Point3,
+    // Camera looks at this point
     look_at: Point3,
+    // The global up vector
     vup: Vec3,
-    vfow_degrees: f64,
+    // The vertical fov in degrees
+    vfov_degrees: f64,
+    // The aspect ratio e.g 16 / 9
     aspect_ratio: f64,
+    // Lens aperture
     aperture: f64,
+    // The distance where the camera should start to focus
     focus_distance: f64,
 }
 
@@ -34,7 +42,7 @@ impl CameraBuilder {
             vup: Vec3::new(0., 1., 0.),
             aperture: 0.5,
             focus_distance: (look_from - look_at).length(),
-            vfow_degrees: 20.0,
+            vfov_degrees: 20.0,
             aspect_ratio: 16.0 / 9.0,
         }
     }
@@ -69,7 +77,7 @@ impl CameraBuilder {
             &self.look_from,
             &self.look_at,
             &self.vup,
-            self.vfow_degrees,
+            self.vfov_degrees,
             self.aspect_ratio,
             self.aperture,
             self.focus_distance,
@@ -113,7 +121,7 @@ impl Camera {
 
         Camera {
             origin: *look_from,
-            lower_left_corner: origin - horizontal / 2. - vertical / 2. - focus_distance*w,
+            lower_left_corner: origin - horizontal / 2. - vertical / 2. - focus_distance * w,
             horizontal,
             vertical,
             u,
@@ -125,9 +133,11 @@ impl Camera {
 
     /// Cast a ray with the camera
     pub fn get_ray(&self, s: f64, t: f64) -> Ray {
-
+        // Get an offset for the lens radius
         let rd = self.lens_radius * Vec3::random_in_unit_disk();
+        // Transform it into the correct frame
         let offset = (self.u * rd.x) + (self.v * rd.y);
+        
         Ray::new(
             self.origin + offset,
             self.lower_left_corner + s * self.horizontal + t * self.vertical - self.origin - offset,
