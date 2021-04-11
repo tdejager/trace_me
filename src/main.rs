@@ -41,11 +41,21 @@ pub fn color_ray(ray: &Ray, world: &impl Hittable, depth: u32) -> Vec3 {
     (1.0 - t) * Color::new(1.0, 1.0, 1.0) + t * Color::new(0.5, 0.7, 1.0)
 }
 
+/// Generate a random scene
+fn random_scene() {
+    let mut world: Vec<Box<dyn Hittable>> = Vec::new();
+    // Material on the ground
+    let material_ground = Box::new(Lambertian::new(Color::new(0.5, 0.5, 0.5)));
+    // Set the ground plane
+    world.push(Box::new(Sphere::new(Point3::new(0.0, -1000.0, 0.0), 1000.0, material_ground)));
+}
+
 fn main() {
     let material_ground = Lambertian::new(Color::new(0.8, 0.8, 0.0));
     let material_center = Lambertian::new(Color::new(0.1, 0.2, 0.5));
     let material_left = Dialectric::new(1.5);
     let material_right = Metal::new(Color::new(0.7, 0.6, 0.2), 0.0);
+
 
     let big_sphere = Sphere {
         center: Point3::new(0., -100.5, -1.0),
